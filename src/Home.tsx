@@ -20,6 +20,15 @@ const Home = ({navigation}: Props): JSX.Element => {
           });
         }}
       />
+      <Button
+        title="Change the title"
+        onPress={() =>
+          navigation.setOptions({
+            title: 'Changed Title!!',
+            headerStyle: {backgroundColor: 'pink'},
+          })
+        }
+      />
     </View>
   );
 };

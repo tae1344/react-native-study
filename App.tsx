@@ -19,9 +19,21 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App = (): JSX.Element => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          title: 'Home Screen',
+          headerStyle: {backgroundColor: 'pink'},
+        }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="User" component={User} />
+        <Stack.Screen
+          name="User"
+          component={User}
+          initialParams={{
+            userId: 500,
+            userName: '12312123123',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
