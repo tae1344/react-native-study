@@ -1,81 +1,75 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import {Linking, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import Home from './src/Home';
-import User from './src/User';
-import UserDrawer from './src/UserDrawer';
-import HomeDrawer from './src/HomeDrawer';
-import CustomDarwer from './src/CustomDrawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
+import HomeView from './src/navigations/HomeView';
+import ProfileView from './src/navigations/ProfileView';
+import SettingView from './src/navigations/SettingView';
+import DrawerComponent from './src/navigations/DrawerComponent';
 
 export type RootStackParamList = {
   Home: undefined;
-  User: {
-    userId: number;
-    userName: string;
-  };
-  CustomDrawer: undefined;
+  Profile: undefined;
+  Drawer: undefined;
+  Main: undefined;
+  Setting: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 const App = (): JSX.Element => {
-  // const CustomDrawerContent = (props: any): JSX.Element => {
-  //   return (
-  //     <DrawerContentScrollView {...props}>
-  //       <DrawerItemList {...props} />
-  //       <DrawerItem
-  //         label="Help"
-  //         onPress={() => Linking.openURL('http://google.com')}
-  //       />
-  //       <DrawerItem label="Info" onPress={() => alert('Info window')} />
-  //     </DrawerContentScrollView>
-  //   );
-  // };
+  const TabScreen = () => {
+    return (
+      <Tab.Navigator
+        initialRouteName="Home"
+        tabBarOptions={{
+          activeBackgroundColor: 'skyblue',
+          activeTintColor: 'blue',
+          inactiveTintColor: '#fff',
+          style: {backgroundColor: '#c6cbef'},
+          labelPosition: 'below-icon',
+        }}>
+        <Tab.Screen name="Home" component={MainScreen} />
+        <Tab.Screen name="Setting" component={SettingView} />
+      </Tab.Navigator>
+    );
+  };
+
+  const MainScreen = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeView} />
+        <Stack.Screen name="Profile" component={ProfileView} />
+      </Stack.Navigator>
+    );
+  };
+
+  const DrawerScreen = (): JSX.Element => {
+    return (
+      <Drawer.Navigator
+        initialRouteName="Home"
+        drawerContentOptions={{
+          activeBackgroundColor: 'skyblue',
+          activeTintColor: 'blue',
+          inactiveTintColor: '#fff',
+          style: {backgroundColor: '#c6cbef'},
+        }}>
+        <Drawer.Screen name="Home" component={TabScreen} />
+        <Drawer.Screen name="Setting" component={SettingView} />
+      </Drawer.Navigator>
+    );
+  };
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName="Home"
-        drawerType="front"
-        drawerPosition="right"
-        drawerStyle={{backgroundColor: '#c6cbef', width: 200}}
-        drawerContentOptions={{
-          activeTintColor: 'red',
-          activeBackgroundColor: 'skyblue',
-        }}
-        drawerContent={props => <CustomDarwer {...props} />}>
-        <Drawer.Screen name="Home" component={HomeDrawer} />
-        <Drawer.Screen name="User" component={UserDrawer} />
-      </Drawer.Navigator>
+      <DrawerScreen />
     </NavigationContainer>
-
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //     initialRouteName="Home"
-    //     screenOptions={{
-    //       title: 'Home Screen',
-    //       headerStyle: {backgroundColor: 'pink'},
-    //     }}>
-    //     <Stack.Screen name="Home" component={Home} />
-    //     <Stack.Screen
-    //       name="User"
-    //       component={User}
-    //       initialParams={{
-    //         userId: 500,
-    //         userName: '12312123123',
-    //       }}
-    //     />
-    //   </Stack.Navigator>
-    // </NavigationContainer>
   );
 };
 
