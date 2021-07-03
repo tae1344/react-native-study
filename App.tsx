@@ -1,78 +1,44 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import {StyleSheet} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import HomeView from './src/navigations/HomeView';
-import ProfileView from './src/navigations/ProfileView';
-import SettingView from './src/navigations/SettingView';
-import DrawerComponent from './src/navigations/DrawerComponent';
-
-export type RootStackParamList = {
-  Home: undefined;
-  Profile: undefined;
-  Drawer: undefined;
-  Main: undefined;
-  Setting: undefined;
-};
-
-const Stack = createStackNavigator<RootStackParamList>();
-const Drawer = createDrawerNavigator();
-const Tab = createBottomTabNavigator();
+import React, {useState} from 'react';
+import {Button, Image, StyleSheet, Text, View} from 'react-native';
+import ImagePicker, {
+  ImagePickerResponse,
+  CameraOptions,
+  CameraType,
+} from 'react-native-image-picker';
 
 const App = (): JSX.Element => {
-  const TabScreen = () => {
-    return (
-      <Tab.Navigator
-        initialRouteName="Home"
-        tabBarOptions={{
-          activeBackgroundColor: 'skyblue',
-          activeTintColor: 'blue',
-          inactiveTintColor: '#fff',
-          style: {backgroundColor: '#c6cbef'},
-          labelPosition: 'below-icon',
-        }}>
-        <Tab.Screen name="Home" component={MainScreen} />
-        <Tab.Screen name="Setting" component={SettingView} />
-      </Tab.Navigator>
-    );
-  };
+  const [avatar, setAvatar] = useState('');
 
-  const MainScreen = () => {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeView} />
-        <Stack.Screen name="Profile" component={ProfileView} />
-      </Stack.Navigator>
-    );
+  const addImage = () => {
+    ImagePicker.launchCamera({}, (response: ImagePickerResponse) => {
+      setAvatar(response.uri);
+    });
   };
-
-  const DrawerScreen = (): JSX.Element => {
-    return (
-      <Drawer.Navigator
-        initialRouteName="Home"
-        drawerContentOptions={{
-          activeBackgroundColor: 'skyblue',
-          activeTintColor: 'blue',
-          inactiveTintColor: '#fff',
-          style: {backgroundColor: '#c6cbef'},
-        }}>
-        <Drawer.Screen name="Home" component={TabScreen} />
-        <Drawer.Screen name="Setting" component={SettingView} />
-      </Drawer.Navigator>
-    );
-  };
-
   return (
-    <NavigationContainer>
-      <DrawerScreen />
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Image source={{uri: avatar}} style={styles.avatar} />
+      <Button title="Add an Image" onPress={() => addImage()} />
+    </View>
   );
 };
 
-const styles = StyleSheet.create({});
+type CameraTypes = {
+  options: CameraOptions;
+  callback(): ImagePickerResponse;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e4ab26',
+  },
+  avatar: {
+    width: '100%',
+    height: 400,
+  },
+});
 
 export default App;
