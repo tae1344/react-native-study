@@ -1,12 +1,14 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import Animation from './src/animation/Animation';
+import Animation01 from './Animation01';
+import Animation02 from './Animation02';
 
-const App = (): JSX.Element => {
+const Animation = (): JSX.Element => {
   return (
     <View style={styles.container}>
-      <Animation />
+      {/*<Animation01 />*/}
+      <Animation02 />
     </View>
   );
 };
@@ -20,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Animation;
